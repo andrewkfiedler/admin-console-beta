@@ -39,7 +39,6 @@ public class DeveloperToolsFieldProvider extends BaseFieldProvider {
         super(FIELD_NAME, FIELD_TYPE_NAME, DESCRIPTION);
         getBundles = new GetBundles(configAdmin);
         getFeatures = new GetFeatures();
-        updateInnerFieldPaths();
     }
 
     @Override

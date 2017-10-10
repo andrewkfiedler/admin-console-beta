@@ -37,7 +37,6 @@ public class ServiceReferenceField extends BaseObjectField {
         resolution = new StringField(RESOLUTION);
         filter = new StringField(FILTER);
         interfacee = new StringField(INTERFACE);
-        updateInnerFieldPaths();
     }
 
     public ServiceReferenceField service(ServiceField service) {

@@ -75,7 +75,6 @@ public class BundleField extends BaseObjectField {
         importedPkgs = new PackageField.ListImpl(IMPORTED_PKGS);
         refs = new ServiceReferenceField.ListImpl();
         refLists = new ReferenceListField.ListImpl();
-        updateInnerFieldPaths();
     }
 
     public BundleField id(int id) {

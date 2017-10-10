@@ -67,7 +67,6 @@ public class GetBundles extends BaseFunctionField<BundleField.ListImpl> {
         super(FIELD_NAME, DESCRIPTION);
         bundleIdArg = new IntegerField(BUNDLE_ID);
         returnType = new BundleField.ListImpl();
-        updateArgumentPaths();
 
         this.configAdmin = configAdmin;
     }

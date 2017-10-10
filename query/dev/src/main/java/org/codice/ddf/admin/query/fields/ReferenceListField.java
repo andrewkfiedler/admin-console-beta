@@ -36,7 +36,6 @@ public class ReferenceListField extends BaseObjectField {
         filter = new StringField(FILTER);
         resolution = new StringField(RESOLUTION);
         interfaceF = new StringField(INTERFACE);
-        updateInnerFieldPaths();
     }
 
     @Override

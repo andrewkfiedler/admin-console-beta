@@ -43,8 +43,6 @@ public class FeatureField extends BaseObjectField {
         repoUrl = new UrlField(REPO_URL);
         featDeps = new StringField.ListImpl(FEATURE_DEPS);
         bundleDeps = new StringField.ListImpl(BUNDLE_DEPS);
-
-        updateInnerFieldPaths();
     }
 
     public FeatureField name(String name) {

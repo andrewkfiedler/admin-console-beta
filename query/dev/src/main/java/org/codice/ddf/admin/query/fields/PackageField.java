@@ -32,7 +32,6 @@ public class PackageField extends BaseObjectField {
         super(DEFAULT_FIELD_NAME, FIELD_TYPE_NAME, DESCRIPTION);
         name = new StringField(NAME);
         bundleId = new IntegerField(BUNDLE_ID);
-        updateInnerFieldPaths();
     }
 
     public PackageField name(String name) {
