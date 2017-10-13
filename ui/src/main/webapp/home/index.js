@@ -9,6 +9,8 @@ import LanguageIcon from 'material-ui/svg-icons/action/language'
 import VpnLockIcon from 'material-ui/svg-icons/notification/vpn-lock'
 import muiThemeable from 'material-ui/styles/muiThemeable'
 
+import ApplicationComponent from '../applications/index.js'
+
 import { expandingTile } from './styles.css'
 
 let TileLink = ({ to, title, subtitle, Icon, muiTheme }) => (
@@ -78,6 +80,13 @@ const SourcesHomeView = () => (
         subtitle='Configure LDAP as a login'
         Icon={AccountIcon} />
     </Flexbox>
+
+    <Title>
+      Applications
+    </Title>
+
+    <ApplicationComponent></ApplicationComponent>
+
   </div>
 )
 

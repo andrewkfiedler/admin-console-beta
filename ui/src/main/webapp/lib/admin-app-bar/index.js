@@ -10,6 +10,32 @@ import AppBar from 'material-ui/AppBar'
 import IconButton from 'material-ui/IconButton'
 import Drawer from 'material-ui/Drawer'
 
+const capitalizeFirstLetter = function (string) {
+  if (string && string !== '') {
+    return string.charAt(0).toUpperCase() + string.slice(1)
+  }
+  return string
+}
+
+const humanizeRouteName = (name) => {
+  var tempName = name // .replace(/\./g,'');
+  var names = tempName.split('-')
+  var workingName = ''
+  names.forEach((name) => {
+    if (workingName.length > 0) {
+      workingName = workingName + ' '
+    }
+    workingName = workingName + capitalizeFirstLetter(name)
+  })
+  return workingName
+}
+
+const getRouteName = (path) => {
+  const parts = path.split('/')
+  parts.shift()
+  return parts.map((part) => humanizeRouteName(part)).join(' > ')
+}
+
 let AdminPalette
 
 if (process.env.NODE_ENV === 'production') {
@@ -59,6 +85,7 @@ class AppBarView extends Component {
       <div>
         <AppBar
           style={getAppBarStyle()}
+          title={getRouteName(this.props.location.pathname)}
           iconElementLeft={
             <IconButton containerElement={<Link to='/' />}>
               <HomeIcon />

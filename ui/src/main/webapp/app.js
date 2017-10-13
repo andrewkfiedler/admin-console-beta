@@ -10,6 +10,7 @@ import Sources from './wizards/sources'
 import { Home } from './home'
 import Wcpm from './security/wcpm'
 import Config from './config'
+import Application from './applications/application/application'
 
 import ddfSources from 'ddf-sources'
 import Backdrop from 'components/Backdrop'
@@ -20,13 +21,13 @@ import MuiThemeProvider from 'admin-app-bar/MuiThemeProvider'
 
 import fonts from 'webpack-fonts'
 
-const App = ({ children }) => (
+const App = ({ children, location }) => (
   <Provider store={store}>
     <ApolloProvider client={client}>
       <MuiThemeProvider>
         <div className={fonts.roboto}>
           <Backdrop>
-            <AdminAppBar />
+            <AdminAppBar location={location} />
             <div style={{ maxWidth: 960, margin: '0 auto', padding: '0 20px' }}>{children}</div>
           </Backdrop>
           <DevTools />
@@ -45,7 +46,8 @@ export const routes = {
     { path: 'sources', component: Sources(ddfSources) },
     { path: 'web-context-policy-manager', component: Wcpm },
     { path: 'graphiql', component: GraphiQL },
-    { path: 'config', component: Config }
+    { path: 'config', component: Config },
+    { path: 'application/:application/:tab', component: Application }
   ]
 }
 

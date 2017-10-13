@@ -1,0 +1,11 @@
+.disappear {
+    transform: scale(0);
+    transition: all 1s ease-in-out;
+    opacity: 0;
+}
+
+.appear {
+    transform: scale(1);
+    transition: all 1s ease-in-out;
+    opacity: 1;
+}
