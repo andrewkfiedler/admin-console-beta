@@ -2,26 +2,27 @@ import React from 'react'
 
 import { connect } from 'react-redux'
 
-import { getAllFeature } from './reducer'
+import { getAllFeature, isLoaded, getApplications } from './reducer'
 
 import CircularProgress from 'material-ui/CircularProgress'
 import Mount from 'react-mount'
-import { disappear, appear } from './styles.css'
+import * as styles from './styles.css'
 import ApplicationItem from './application-item/application-item'
+import Fade from './transitions/fade'
 
-const Applications = ({ applications, onLoad, loading }) => (
+const Applications = ({ applications, onLoad, loaded }) => (
   <div>
     <Mount on={onLoad} />
-    <CircularProgress className={loading ? appear : disappear} style={{position: 'absolute'}} />
-    <div className={loading ? disappear : appear}>
-      {applications.map((app, i) => <ApplicationItem key={i} data={app} />)}
-    </div>
+    <CircularProgress className={loaded ? styles.disappear : styles.appear} style={{position: 'absolute'}} />
+    <Fade>
+      {loaded ? applications.map((app, i) => <ApplicationItem key={i} data={app} />) : null}
+    </Fade>
   </div>
 )
 
 const mapStateToProps = (state) => ({
-  applications: state.getIn(['applications', 'data']).toJS(),
-  loading: state.getIn(['applications', 'loading'])
+  applications: getApplications(state),
+  loaded: isLoaded(state)
 })
 
 export default connect(

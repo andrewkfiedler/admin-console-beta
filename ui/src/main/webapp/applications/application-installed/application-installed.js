@@ -2,14 +2,15 @@ import React from 'react'
 
 import { connect } from 'react-redux'
 
-import { getFeature } from '../reducer'
+import { getFeaturesForApp, getApplications } from '../reducer'
 
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation'
 import DescriptionIcon from 'material-ui/svg-icons/action/description'
 import SettingsIcon from 'material-ui/svg-icons/action/settings'
 import FeaturesIcon from 'material-ui/svg-icons/av/play-arrow'
 import { Link as RouterLink } from 'react-router'
-import Mount from 'react-mount'
+import ApplicationFeatures from '../application-features'
+import ApplicationDescription from '../application-description'
 
 const findApplication = (installedApplications, appName) => {
   return installedApplications.filter((app) => app.name === appName)[0]
@@ -21,47 +22,10 @@ const Link = ({ to, children, ...props }) => (
   </RouterLink>
 )
 
-const Section = ({label, value}) => {
-  let valElement = <div>{value}</div>
-  if (value.constructor === Array) {
-    valElement = value.map((val) => {
-      return <RouterLink to={`/application/${val}/description`}><div>{val}</div></RouterLink>
-    })
-  }
-
-  return (
-    <div style={{padding: 10}}>
-      <div style={{fontSize: 20}}>{label}</div>
-      {valElement}
-    </div>
-  )
-}
-
-const Description = ({application}) => {
-  return (
-    <div>
-      <Section label='Description' value={application.description} />
-      <Section label='Version' value={application.version} />
-      <Section label='State' value={application.state} />
-      <Section label='Dependencies' value={application.parents} />
-      <Section label='Child Dependencies' value={application.dependencies} />
-    </div>
-  )
-}
-
 const Configuration = ({application}) => {
   return (
     <div>
       Configuration
-    </div>
-  )
-}
-
-const Features = ({application, onLoad}) => {
-  return (
-    <div>
-      <Mount on={() => onLoad(application.name)} />
-      Features
     </div>
   )
 }
@@ -74,7 +38,7 @@ class Application extends React.Component {
     }
   }
   render () {
-    const {applications, applicationName, tab, onLoad} = this.props
+    const {applications, applicationName, tab} = this.props
     const application = findApplication(applications, applicationName)
     const select = (index) => () => this.setState({selectedIndex: index})
 
@@ -85,9 +49,9 @@ class Application extends React.Component {
     }
 
     const tabs = {
-      description: Description,
+      description: ApplicationDescription,
       configuration: Configuration,
-      features: Features
+      features: ApplicationFeatures
     }
 
     const ActiveTab = tabs[tab] || tabs.description
@@ -114,19 +78,19 @@ class Application extends React.Component {
               onClick={select(2)} />
           </Link>
         </BottomNavigation>
-        <ActiveTab application={application} onLoad={onLoad} />
+        <ActiveTab application={application} />
       </div>
     )
   }
 }
 
 const mapStateToProps = (state) => ({
-  applications: state.getIn(['applications', 'data']).toJS()
+  applications: getApplications(state)
 })
 
 export default connect(
   mapStateToProps,
   {
-    onLoad: getFeature
+    getFeaturesForApp: getFeaturesForApp
   }
 )(Application)

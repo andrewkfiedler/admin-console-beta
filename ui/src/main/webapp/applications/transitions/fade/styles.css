@@ -1,0 +1,25 @@
+.appear,
+.enter {
+    opacity: 0;
+    transition: all .5 ease-in-out;
+    transform: translateX(100%);
+}
+
+.appearActive,
+.enterActive,
+.leave {
+    transition: all .5 ease-in-out;
+    opacity: 1;
+    transform: translateX(0%);
+}
+
+.leaveActive {
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    transform: translateX(-100%);
+    transition: all .5 ease-in-out;
+    opacity: 0;
+}

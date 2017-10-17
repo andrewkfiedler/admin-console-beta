@@ -45,6 +45,7 @@
     "material-ui": "^0.19.3",
     "prop-types": "^15.5.8",
     "react": "^15.1.0",
+    "react-addons-css-transition-group": "^15.6.2",
     "react-apollo": "^1.4.2",
     "react-color": "^2.12.0",
     "react-deep-force-update": "^2.0.1",

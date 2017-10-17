@@ -21,6 +21,8 @@ import MuiThemeProvider from 'admin-app-bar/MuiThemeProvider'
 
 import fonts from 'webpack-fonts'
 
+import Fade from './applications/transitions/fade'
+
 const App = ({ children, location }) => (
   <Provider store={store}>
     <ApolloProvider client={client}>
@@ -28,7 +30,11 @@ const App = ({ children, location }) => (
         <div className={fonts.roboto}>
           <Backdrop>
             <AdminAppBar location={location} />
-            <div style={{ maxWidth: 960, margin: '0 auto', padding: '0 20px' }}>{children}</div>
+            <div style={{ maxWidth: '100%', width: 960, margin: '0 auto', padding: '0 20px' }}>
+              <Fade>
+                {children}
+              </Fade>
+            </div>
           </Backdrop>
           <DevTools />
         </div>
