@@ -27,11 +27,11 @@ export const getFeaturesForApp = (app) => (dispatch, getState) => {
   }
 }
 
-export const getServices = (app) => (dispatch) => {
+export const getConfigurationsForApp = (app) => (dispatch) => {
   window.fetch(configurationsUrl + app, { method: 'GET', credentials: 'same-origin' })
     .then((res) => res.json())
     .then((json) => {
-      dispatch({ type: 'setServices', json, app })
+      dispatch({ type: 'setConfigurationsForApp', json, app })
     })
 }
 
@@ -77,8 +77,9 @@ export default (state = null, { type, json, app, feature }) => {
     case 'setFeaturesForApp':
       index = state.findIndex((application) => application.get('name') === app)
       return state.setIn([index, 'currentFeatures'], fromJS(json.value))
-    case 'setServices':
-      return state
+    case 'setConfigurationsForApp':
+      index = state.findIndex((application) => application.get('name') === app)
+      return state.setIn([index, 'currentConfigurations'], fromJS(json.value))
     case 'startLoadingFeature':
       appIndex = state.findIndex((application) => application.get('name') === app)
       featureIndex = state.getIn([appIndex, 'currentFeatures']).findIndex((otherFeature) => otherFeature.get('name') === feature)

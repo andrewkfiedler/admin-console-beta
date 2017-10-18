@@ -11,6 +11,7 @@ import FeaturesIcon from 'material-ui/svg-icons/av/play-arrow'
 import { Link as RouterLink } from 'react-router'
 import ApplicationFeatures from '../application-features'
 import ApplicationDescription from '../application-description'
+import ApplicationConfiguration from '../application-configuration'
 
 const findApplication = (installedApplications, appName) => {
   return installedApplications.filter((app) => app.name === appName)[0]
@@ -21,14 +22,6 @@ const Link = ({ to, children, ...props }) => (
     {React.cloneElement(children, props)}
   </RouterLink>
 )
-
-const Configuration = ({application}) => {
-  return (
-    <div>
-      Configuration
-    </div>
-  )
-}
 
 class Application extends React.Component {
   constructor (props) {
@@ -50,7 +43,7 @@ class Application extends React.Component {
 
     const tabs = {
       description: ApplicationDescription,
-      configuration: Configuration,
+      configuration: ApplicationConfiguration,
       features: ApplicationFeatures
     }
 

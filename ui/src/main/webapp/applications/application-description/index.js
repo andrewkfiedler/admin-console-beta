@@ -3,7 +3,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { Link as RouterLink } from 'react-router'
-import Section from '../Section'
+import Section from '../section'
 
 const ApplicationFeatures = ({application}) => (
   <div>
