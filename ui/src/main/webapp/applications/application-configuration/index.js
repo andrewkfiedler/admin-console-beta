@@ -8,8 +8,12 @@ import Mount from 'react-mount'
 
 import { disappear, appear } from '../styles.css'
 import FlatButton from 'material-ui/FlatButton'
-import DeleteIcon from 'material-ui/svg-icons/action/history'
+import ResetIcon from 'material-ui/svg-icons/action/history'
+import DeleteIcon from 'material-ui/svg-icons/action/delete'
+import DeleteAllIcon from 'material-ui/svg-icons/content/delete-sweep'
+import SubIcon from 'material-ui/svg-icons/navigation/subdirectory-arrow-right'
 import EditIcon from 'material-ui/svg-icons/editor/mode-edit'
+import AddIcon from 'material-ui/svg-icons/content/add'
 import Section from '../section'
 import CustomTable from '../table'
 
@@ -38,7 +42,7 @@ const FeatureTable2 = ({configurations, application}) => {
     let actionButton
     if (feature.loading !== true) {
       actionButton = feature.configurations !== undefined
-      ? <div><FlatButton label='Edit' icon={<EditIcon />} /> <FlatButton label='Reset To Defaults' icon={<DeleteIcon />} /></div>
+      ? <div><FlatButton label='Edit' icon={<EditIcon />} /> <FlatButton label='Reset To Defaults' icon={<ResetIcon />} /></div>
       : <FlatButton label='Customize' icon={<EditIcon />} />
     }
     return [
@@ -55,7 +59,7 @@ const FeatureTable2 = ({configurations, application}) => {
 
 const FeatureTable = ({configurations, application}) => {
   return (
-    <Table fixedHeader selectable={false} wrapperStyle={{maxHeight: '50vh'}}>
+    <Table fixedHeader selectable={false}>
       <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
         <TableRow>
           <TableHeaderColumn>Name</TableHeaderColumn>
@@ -70,20 +74,45 @@ const FeatureTable = ({configurations, application}) => {
             return -1
           }
           return 0
-        }).map((feature) => {
-          let actionButton
-          if (feature.loading !== true) {
+        }).reduce((rows, feature) => {
+          let actionButton = <div>
+            <FlatButton label='Add' icon={<AddIcon />} />
+            {feature.configurations !== undefined ? <FlatButton label='Delete All' icon={<DeleteAllIcon />} /> : null}
+          </div>
+          if (feature.factory !== true) {
             actionButton = feature.configurations !== undefined
-            ? <div><FlatButton label='Edit' icon={<EditIcon />} /> <FlatButton label='Reset To Defaults' icon={<DeleteIcon />} /></div>
+            ? <div><FlatButton label='Edit' icon={<EditIcon />} /> <FlatButton label='Reset To Defaults' icon={<ResetIcon />} /></div>
             : <FlatButton label='Customize' icon={<EditIcon />} />
           }
-          return (
-            <TableRow>
-              <TableRowColumn>{feature.name}</TableRowColumn>
-              <TableRowColumn>{actionButton}</TableRowColumn>
-            </TableRow>
-          )
-        })}
+          rows.push(<TableRow>
+            <TableRowColumn>
+              <div style={{display: 'inline-block', verticalAlign: 'middle'}}>
+                {feature.name}
+              </div>
+            </TableRowColumn>
+            <TableRowColumn>{actionButton}</TableRowColumn>
+          </TableRow>)
+          if (feature.factory === true && feature.configurations !== undefined) {
+            rows = rows.concat(feature.configurations.map((config) => {
+              return (
+                <TableRow style={{borderBottom: 'none'}}>
+                  <TableRowColumn>
+                    <div style={{display: 'inline-block', verticalAlign: 'middle', paddingLeft: 15, opacity: 0.8}}>
+                      {(() => {
+                        const test = config.id.split('.')
+                        return test[test.length - 1]
+                      })()}
+                    </div>
+                  </TableRowColumn>
+                  <TableRowColumn>
+                    <div style={{paddingLeft: 15}}><FlatButton label='Edit' icon={<EditIcon />} /> <FlatButton label='Delete' icon={<DeleteIcon />} /></div>
+                  </TableRowColumn>
+                </TableRow>
+              )
+            }))
+          }
+          return rows
+        }, [])}
       </TableBody>
     </Table>
   )
@@ -92,11 +121,14 @@ const FeatureTable = ({configurations, application}) => {
 const FeaturesContainer = ({configurations, application}) => {
   return (
     <div>
-      <Section title='Configured'>
-        <FeatureTable2 application={application} configurations={configurations.filter((feature) => feature.configurations !== undefined)} />
+      <Section title='Custom'>
+        <FeatureTable application={application} configurations={configurations.filter((feature) => feature.factory === false && feature.configurations !== undefined)} />
       </Section>
-      <Section title='Defaults'>
-        <FeatureTable2 application={application} configurations={configurations.filter((feature) => feature.configurations === undefined)} />
+      <Section title='Factories'>
+        <FeatureTable application={application} configurations={configurations.filter((feature) => feature.factory === true)} />
+      </Section>
+      <Section title='Default'>
+        <FeatureTable application={application} configurations={configurations.filter((feature) => feature.factory === false && feature.configurations === undefined)} />
       </Section>
     </div>
   )

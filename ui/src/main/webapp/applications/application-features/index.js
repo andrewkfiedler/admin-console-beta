@@ -12,15 +12,50 @@ import InstallIcon from 'material-ui/svg-icons/av/play-arrow'
 import UninstallIcon from 'material-ui/svg-icons/av/stop'
 import LinearProgress from 'material-ui/LinearProgress'
 import Section from '../section'
+import Table2 from '../table'
 
 import {
-    Table,
-    TableBody,
-    TableHeader,
-    TableHeaderColumn,
-    TableRow,
-    TableRowColumn
-  } from 'material-ui/Table'
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn
+} from 'material-ui/Table'
+
+const FeatureTable2 = ({features, application, installFeature, uninstallFeature}) => {
+  const header = [
+    <div>Name</div>,
+    <div>Actions</div>
+  ]
+  const body = features.sort((a, b) => {
+    if (a.name > b.name) {
+      return 1
+    } else if (a.name < b.name) {
+      return -1
+    }
+    return 0
+  }).map((feature) => {
+    let actionButton = <div style={{textAlign: 'center'}}>
+      {feature.status === 'Installed' ? 'Uninstalling' : 'Installing'}
+      <LinearProgress mode='indeterminate' />
+    </div>
+    if (feature.loading !== true) {
+      actionButton = feature.status === 'Installed'
+      ? <FlatButton label='Uninstall' icon={<UninstallIcon />} onClick={() => uninstallFeature(application.name, feature.name)} />
+      : <FlatButton label='Install' icon={<InstallIcon />} onClick={() => installFeature(application.name, feature.name)} />
+    }
+    return [
+      <div>{feature.name}</div>,
+      actionButton
+    ]
+  })
+  return (
+    <div style={{maxHeight: '50vh'}}>
+      <Table2 header={header} body={body} />
+    </div>
+  )
+}
 
 const FeatureTable = ({features, application, installFeature, uninstallFeature}) => {
   return (

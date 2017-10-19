@@ -27,12 +27,14 @@ export const getFeaturesForApp = (app) => (dispatch, getState) => {
   }
 }
 
-export const getConfigurationsForApp = (app) => (dispatch) => {
-  window.fetch(configurationsUrl + app, { method: 'GET', credentials: 'same-origin' })
+export const getConfigurationsForApp = (app) => (dispatch, getState) => {
+  if (!isAppConfigurationsLoaded(getState(), app)) {
+    window.fetch(configurationsUrl + app, { method: 'GET', credentials: 'same-origin' })
     .then((res) => res.json())
     .then((json) => {
       dispatch({ type: 'setConfigurationsForApp', json, app })
     })
+  }
 }
 
 export const uninstallFeature = (app, feature) => (dispatch) => {
@@ -43,7 +45,8 @@ export const uninstallFeature = (app, feature) => (dispatch) => {
       window.fetch(featuresUrl + app, { method: 'GET', credentials: 'same-origin' })
       .then((res) => res.json())
       .then((json) => {
-        dispatch({ type: 'setFeaturesForApp', json, app })
+        dispatch({ type: 'updateFeaturesForApp', json, app })
+        dispatch({ type: 'stopLoadingFeature', app, feature })
       })
     })
 }
@@ -56,7 +59,8 @@ export const installFeature = (app, feature) => (dispatch) => {
       window.fetch(featuresUrl + app, { method: 'GET', credentials: 'same-origin' })
       .then((res) => res.json())
       .then((json) => {
-        dispatch({ type: 'setFeaturesForApp', json, app })
+        dispatch({ type: 'updateFeaturesForApp', json, app })
+        dispatch({ type: 'stopLoadingFeature', app, feature })
       })
     })
 }
@@ -77,6 +81,9 @@ export default (state = null, { type, json, app, feature }) => {
     case 'setFeaturesForApp':
       index = state.findIndex((application) => application.get('name') === app)
       return state.setIn([index, 'currentFeatures'], fromJS(json.value))
+    case 'updateFeaturesForApp':
+      index = state.findIndex((application) => application.get('name') === app)
+      return state.mergeDeepIn([index, 'currentFeatures'], fromJS(json.value))
     case 'setConfigurationsForApp':
       index = state.findIndex((application) => application.get('name') === app)
       return state.setIn([index, 'currentConfigurations'], fromJS(json.value))
@@ -84,6 +91,10 @@ export default (state = null, { type, json, app, feature }) => {
       appIndex = state.findIndex((application) => application.get('name') === app)
       featureIndex = state.getIn([appIndex, 'currentFeatures']).findIndex((otherFeature) => otherFeature.get('name') === feature)
       return state.setIn([appIndex, 'currentFeatures', featureIndex, 'loading'], fromJS(true))
+    case 'stopLoadingFeature':
+      appIndex = state.findIndex((application) => application.get('name') === app)
+      featureIndex = state.getIn([appIndex, 'currentFeatures']).findIndex((otherFeature) => otherFeature.get('name') === feature)
+      return state.setIn([appIndex, 'currentFeatures', featureIndex, 'loading'], fromJS(false))
     default:
       return state
   }
@@ -97,6 +108,11 @@ export const isLoaded = (state, path = []) => {
 export const isAppFeaturesLoaded = (state, app) => {
   const index = state.getIn(['applications']).findIndex((application) => application.get('name') === app)
   return isLoaded(state, [index, 'currentFeatures'])
+}
+
+export const isAppConfigurationsLoaded = (state, app) => {
+  const index = state.getIn(['applications']).findIndex((application) => application.get('name') === app)
+  return isLoaded(state, [index, 'currentConfigurations'])
 }
 
 export const isAppFeatureLoading = (state, app, feature) => {
